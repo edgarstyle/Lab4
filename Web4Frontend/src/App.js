@@ -1,19 +1,15 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { checkAuth } from './store/actions/authActions';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import LoginPage from './components/LoginPage';
 import MainPage from './components/MainPage';
+import NotificationContainer from './components/Notification';
 
 function App() {
-  const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector(state => state.auth);
-
-  useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
   return (
-    <div className="App">
+    <div className="app">
+      <NotificationContainer />
       {isAuthenticated ? <MainPage /> : <LoginPage />}
     </div>
   );

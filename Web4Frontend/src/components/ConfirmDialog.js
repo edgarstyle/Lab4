@@ -1,28 +1,21 @@
 import React from 'react';
 import './ConfirmDialog.css';
 
-const ConfirmDialog = ({ message, onConfirm, onCancel }) => {
-  if (!message) return null;
+const ConfirmDialog = ({ show, title, message, onConfirm, onCancel }) => {
+  if (!show) return null;
 
   return (
     <div className="confirm-dialog-overlay" onClick={onCancel}>
       <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="confirm-dialog-content">
-          <p className="confirm-dialog-message">{message}</p>
-          <div className="confirm-dialog-buttons">
-            <button 
-              className="confirm-dialog-button confirm-dialog-button-cancel"
-              onClick={onCancel}
-            >
-              Отмена
-            </button>
-            <button 
-              className="confirm-dialog-button confirm-dialog-button-confirm"
-              onClick={onConfirm}
-            >
-              Подтвердить
-            </button>
-          </div>
+        <h3 className="confirm-dialog-title">{title}</h3>
+        <p className="confirm-dialog-message">{message}</p>
+        <div className="confirm-dialog-buttons">
+          <button className="confirm-dialog-button confirm-dialog-button-cancel" onClick={onCancel}>
+            Отмена
+          </button>
+          <button className="confirm-dialog-button confirm-dialog-button-confirm" onClick={onConfirm}>
+            Подтвердить
+          </button>
         </div>
       </div>
     </div>
@@ -30,5 +23,4 @@ const ConfirmDialog = ({ message, onConfirm, onCancel }) => {
 };
 
 export default ConfirmDialog;
-
 

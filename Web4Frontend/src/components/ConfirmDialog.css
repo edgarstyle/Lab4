@@ -6,54 +6,44 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 10001;
-  animation: fadeIn 0.2s ease-out;
 }
 
 .confirm-dialog {
   background: white;
   border-radius: 8px;
-  padding: 24px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s ease-out;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 500px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-.confirm-dialog-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.confirm-dialog-title {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .confirm-dialog-message {
-  margin: 0;
-  color: #333;
-  font-size: 16px;
-  line-height: 1.5;
-  word-wrap: break-word;
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .confirm-dialog-buttons {
   display: flex;
-  gap: 12px;
   justify-content: flex-end;
+  gap: 10px;
 }
 
 .confirm-dialog-button {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 8px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.confirm-dialog-button:active {
-  transform: scale(0.98);
+  font-size: 14px;
 }
 
 .confirm-dialog-button-cancel {
@@ -66,52 +56,11 @@
 }
 
 .confirm-dialog-button-confirm {
-  background-color: #dc3545;
+  background-color: #2196F3;
   color: white;
 }
 
 .confirm-dialog-button-confirm:hover {
-  background-color: #c82333;
+  background-color: #1976D2;
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 765px) {
-  .confirm-dialog {
-    padding: 20px;
-    max-width: 90%;
-  }
-  
-  .confirm-dialog-message {
-    font-size: 14px;
-  }
-  
-  .confirm-dialog-buttons {
-    flex-direction: column;
-  }
-  
-  .confirm-dialog-button {
-    width: 100%;
-  }
-}
-
 

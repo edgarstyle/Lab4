@@ -1,15 +1,19 @@
 {
   "name": "web4-frontend",
   "version": "1.0.0",
-  "description": "Frontend для лабораторной работы №4",
+  "description": "Frontend for Web4 laboratory work",
   "private": true,
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production"
+  },
   "dependencies": {
-    "axios": "^1.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.3",
     "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "axios": "^1.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
@@ -22,9 +26,6 @@
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
-  },
-  "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
   }
 }
+

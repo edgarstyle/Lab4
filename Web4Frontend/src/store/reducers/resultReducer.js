@@ -42,6 +42,7 @@ const resultReducer = (state = initialState, action) => {
     case CLEAR_RESULTS_SUCCESS:
       return {
         ...state,
+        results: [],
         loading: false,
         error: null
       };

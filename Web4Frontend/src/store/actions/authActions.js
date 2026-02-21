@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = '/web4/api';
+const API_URL = 'http://localhost:8080/web4/api';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -12,87 +12,67 @@ export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
 export const login = (username, password) => {
   return async (dispatch) => {
-    dispatch({ type: LOGIN_REQUEST });
     try {
+      dispatch({ type: LOGIN_REQUEST });
       const response = await axios.post(`${API_URL}/auth/login`, {
         username,
         password
       });
-      if (response.data.success) {
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('username', response.data.username);
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: {
-            userId: response.data.userId,
-            username: response.data.username
-          }
-        });
-      } else {
-        dispatch({
-          type: LOGIN_FAILURE,
-          payload: response.data.message || 'Ошибка входа'
-        });
-      }
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: {
+          userId: response.data.userId,
+          username: response.data.username
+        }
+      });
     } catch (error) {
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.entity || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Ошибка входа';
       dispatch({
         type: LOGIN_FAILURE,
-        payload: error.response?.data?.message || 'Ошибка подключения к серверу'
+        payload: errorMessage
       });
+      throw error;
     }
   };
 };
 
 export const register = (username, password) => {
   return async (dispatch) => {
-    dispatch({ type: REGISTER_REQUEST });
     try {
+      dispatch({ type: REGISTER_REQUEST });
       const response = await axios.post(`${API_URL}/auth/register`, {
         username,
         password
       });
-      if (response.data.success) {
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('username', response.data.username);
-        dispatch({
-          type: REGISTER_SUCCESS,
-          payload: {
-            userId: response.data.userId,
-            username: response.data.username
-          }
-        });
-      } else {
-        dispatch({
-          type: REGISTER_FAILURE,
-          payload: response.data.message || 'Ошибка регистрации'
-        });
-      }
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: {
+          userId: response.data.userId,
+          username: response.data.username
+        }
+      });
     } catch (error) {
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.entity || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Ошибка регистрации';
       dispatch({
         type: REGISTER_FAILURE,
-        payload: error.response?.data?.message || 'Ошибка подключения к серверу'
+        payload: errorMessage
       });
+      throw error;
     }
   };
 };
 
 export const logout = () => {
-  localStorage.removeItem('userId');
-  localStorage.removeItem('username');
-  return { type: LOGOUT };
-};
-
-export const checkAuth = () => {
-  return (dispatch) => {
-    const userId = localStorage.getItem('userId');
-    const username = localStorage.getItem('username');
-    if (userId && username) {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: { userId: parseInt(userId), username }
-      });
-    }
+  return {
+    type: LOGOUT
   };
 };
-
 

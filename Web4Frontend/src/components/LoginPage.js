@@ -1,77 +1,72 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { TextInput, Button } from './BelleComponents';
+import { useDispatch } from 'react-redux';
 import { login, register } from '../store/actions/authActions';
+import { TextInput, Button } from './BelleComponents';
+import { showNotification } from './Notification';
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector(state => state.auth);
-  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isRegister, setIsRegister] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isRegister) {
-      dispatch(register(username, password));
-    } else {
-      dispatch(login(username, password));
+    if (!username.trim() || !password.trim()) {
+      showNotification('Заполните все поля', 'error');
+      return;
+    }
+
+    try {
+      if (isRegister) {
+        await dispatch(register(username, password));
+        showNotification('Регистрация успешна', 'success');
+      } else {
+        await dispatch(login(username, password));
+        showNotification('Вход выполнен', 'success');
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.entity || 
+                          error.response?.data?.error || 
+                          'Произошла ошибка';
+      showNotification(errorMessage, 'error');
     }
   };
 
   return (
-    <div className="container">
+    <div className="login-page">
+      <h1>Павлов Эдгар P3216 88744</h1>
       <div className="login-container">
-        <div className="header">
-          <h1>Павлов Эдгар P3216 88744</h1>
-        </div>
-        
+        <h2>{isRegister ? 'Регистрация' : 'Вход'}</h2>
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
+          <div className="form-group">
             <label>Имя пользователя:</label>
             <TextInput
               value={username}
-              onUpdate={(value) => setUsername(value)}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Введите имя пользователя"
-              required
-              style={{ width: '100%' }}
             />
           </div>
-          
-          <div className="input-group">
+          <div className="form-group">
             <label>Пароль:</label>
             <TextInput
               type="password"
               value={password}
-              onUpdate={(value) => setPassword(value)}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Введите пароль"
-              required
-              style={{ width: '100%' }}
             />
           </div>
-          
-          {error && (
-            <div className="error-message">{error}</div>
-          )}
-          
-          <div style={{ marginTop: '20px', display: 'flex', gap: '10px', flexDirection: 'column' }}>
-            <Button
-              type="submit"
-              disabled={loading}
-              style={{ width: '100%' }}
-            >
-              {loading ? 'Загрузка...' : (isRegister ? 'Зарегистрироваться' : 'Войти')}
-            </Button>
-            
-            <Button
-              type="button"
-              onClick={() => setIsRegister(!isRegister)}
-              style={{ width: '100%', backgroundColor: '#6c757d' }}
-            >
-              {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
-            </Button>
-          </div>
+          <Button type="submit" primary>
+            {isRegister ? 'Зарегистрироваться' : 'Войти'}
+          </Button>
+          <Button
+            type="button"
+            onClick={() => setIsRegister(!isRegister)}
+            style={{ marginTop: '10px' }}
+          >
+            {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
+          </Button>
         </form>
       </div>
     </div>

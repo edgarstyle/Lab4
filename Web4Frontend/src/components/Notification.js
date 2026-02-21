@@ -1,36 +1,60 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Notification.css';
 
-const Notification = ({ message, type = 'error', onClose, duration = 5000 }) => {
-  useEffect(() => {
-    if (duration > 0 && onClose) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, duration);
-      return () => clearTimeout(timer);
-    }
-  }, [duration, onClose]);
+let notificationId = 0;
+const notifications = [];
+const listeners = [];
 
-  if (!message) return null;
+const addListener = (callback) => {
+  listeners.push(callback);
+  return () => {
+    const index = listeners.indexOf(callback);
+    if (index > -1) {
+      listeners.splice(index, 1);
+    }
+  };
+};
+
+const notifyListeners = () => {
+  listeners.forEach(callback => callback([...notifications]));
+};
+
+export const showNotification = (message, type = 'info', duration = 3000) => {
+  const id = notificationId++;
+  const notification = { id, message, type, duration };
+  notifications.push(notification);
+  notifyListeners();
+
+  setTimeout(() => {
+    const index = notifications.findIndex(n => n.id === id);
+    if (index > -1) {
+      notifications.splice(index, 1);
+      notifyListeners();
+    }
+  }, duration);
+};
+
+const NotificationContainer = () => {
+  const [notificationsList, setNotificationsList] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = addListener(setNotificationsList);
+    return unsubscribe;
+  }, []);
 
   return (
-    <div className={`notification notification-${type}`}>
-      <div className="notification-content">
-        <span className="notification-message">{message}</span>
-        {onClose && (
-          <button 
-            className="notification-close" 
-            onClick={onClose}
-            aria-label="Закрыть"
-          >
-            ×
-          </button>
-        )}
-      </div>
+    <div className="notification-container">
+      {notificationsList.map(notification => (
+        <div
+          key={notification.id}
+          className={`notification notification-${notification.type}`}
+        >
+          {notification.message}
+        </div>
+      ))}
     </div>
   );
 };
 
-export default Notification;
-
+export default NotificationContainer;
 
